@@ -1,1 +1,140 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Input Rekap Penjualan</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f0f4f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .card {
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+      box-sizing: border-box;
+    }
+    h2 {
+      text-align: center;
+      color: #333333;
+      margin-bottom: 25px;
+      font-size: 24px;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: #555555;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    input[type="number"] {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #cccccc;
+      border-radius: 8px;
+      box-sizing: border-box;
+      font-size: 16px;
+    }
+    input[type="number"]:focus {
+      outline: none;
+      border-color: #28a745;
+      box-shadow: 0 0 5px rgba(40, 167, 69, 0.3);
+    }
+    button {
+      width: 100%;
+      padding: 14px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+  </style>
+</head>
+<body>
 
+  <div class="card">
+    <h2>Rekap Harian</h2>
+    <form id="formRekap">
+      <div class="form-group">
+        <label for="orderKuota">Saldo Order Kuota (Rp)</label>
+        <input type="number" id="orderKuota" required>
+      </div>
+      <div class="form-group">
+        <label for="bankBri">Saldo Bank BRI (Rp)</label>
+        <input type="number" id="bankBri" required>
+      </div>
+      <div class="form-group">
+        <label for="bankSeabank">Saldo Bank Seabank (Rp)</label>
+        <input type="number" id="bankSeabank" required>
+      </div>
+      <div class="form-group">
+        <label for="tunai">Tunai (Rp)</label>
+        <input type="number" id="tunai" required>
+      </div>
+      <button type="submit" id="btnSubmit">Simpan Data</button>
+    </form>
+  </div>
+
+  <script>
+    // ====================================================================
+    // TEMPEL URL APLIKASI WEB DARI GOOGLE APPS SCRIPT DI SINI:
+    // ====================================================================
+    const GASS_URL = "https://script.google.com/macros/s/AKfycbwAoiY6ZWCasCex5SXUUmdpSyTUg11LwOM-EdcV_O5fh-WflwCoskbCRsI0-weyyMCr/exec"; 
+    // ====================================================================
+
+    document.getElementById("formRekap").addEventListener("submit", function(e) {
+      e.preventDefault();
+      
+      let btn = document.getElementById("btnSubmit");
+      btn.innerText = "Menyimpan...";
+      btn.style.backgroundColor = "#6c757d";
+      btn.disabled = true;
+
+      let data = {
+        orderKuota: document.getElementById("orderKuota").value,
+        bankBri: document.getElementById("bankBri").value,
+        bankSeabank: document.getElementById("bankSeabank").value,
+        tunai: document.getElementById("tunai").value
+      };
+
+      fetch(GASS_URL, {
+        method: "POST",
+        body: JSON.stringify(data),
+        mode: "no-cors"
+      })
+      .then(() => {
+        alert("Data rekap berhasil disimpan ke Google Sheets!");
+        document.getElementById("formRekap").reset();
+        btn.innerText = "Simpan Data";
+        btn.style.backgroundColor = "#28a745";
+        btn.disabled = false;
+      })
+      .catch(error => {
+        alert("Gagal menyimpan data: " + error);
+        btn.innerText = "Simpan Data";
+        btn.style.backgroundColor = "#28a745";
+        btn.disabled = false;
+      });
+    });
+  </script>
+</body>
+</html>
